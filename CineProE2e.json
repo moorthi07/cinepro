@@ -1,0 +1,552 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "CineProE2e",
+    "description": "CineProE2e API provides a comprehensive set of endpoints for managing the end-to-end process of cine production, including user management, project tracking, and resource allocation.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "CinePro Support",
+      "url": "https://cinepro.com/support",
+      "email": "support@cinepro.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "Projects",
+      "description": "Operations related to project management."
+    },
+    {
+      "name": "Scripts",
+      "description": "Operations related to script management."
+    },
+    {
+      "name": "Plots",
+      "description": "Operations related to plot management."
+    },
+    {
+      "name": "Crew",
+      "description": "Operations related to crew management."
+    },
+    {
+      "name": "Schedules",
+      "description": "Operations related to scheduling."
+    }
+  ],
+  "paths": {
+    "/projects": {
+      "post": {
+        "operationId": "createProject",
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Create a new project and upload audio file",
+        "description": "This endpoint creates a new project, uploads an audio file, and returns a text file.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "audioFile"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Film Production"
+                  },
+                  "audioFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Project created and audio processed successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "textFile": {
+                      "type": "string",
+                      "example": "transcription.txt"
+                    }
+                  },
+                  "required": [
+                    "textFile"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/scripts/generate": {
+      "post": {
+        "operationId": "generateScreenplay",
+        "tags": [
+          "Scripts"
+        ],
+        "summary": "Generate screenplay from text",
+        "description": "This endpoint generates a screenplay from the provided text.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "example": "This is the text to generate a screenplay from."
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Screenplay generated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "scriptText": {
+                      "type": "string",
+                      "example": "Generated screenplay text."
+                    }
+                  },
+                  "required": [
+                    "scriptText"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/plots/generate": {
+      "post": {
+        "operationId": "generatePlot",
+        "tags": [
+          "Plots"
+        ],
+        "summary": "Generate plot from script text",
+        "description": "This endpoint generates a plot from the provided script text.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "scriptText"
+                ],
+                "properties": {
+                  "scriptText": {
+                    "type": "string",
+                    "example": "This is the script text to generate a plot from."
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Plot generated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "plot": {
+                      "type": "string",
+                      "example": "Generated plot text."
+                    }
+                  },
+                  "required": [
+                    "plot"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/plots/search": {
+      "post": {
+        "operationId": "searchSimilarPlots",
+        "tags": [
+          "Plots"
+        ],
+        "summary": "Search for similar plots",
+        "description": "This endpoint searches for similar plots based on the provided plot text.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "plot"
+                ],
+                "properties": {
+                  "plot": {
+                    "type": "string",
+                    "example": "This is the plot text to search for similar plots."
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Similar plots found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "example": "Similar plot text."
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/scripts/compare": {
+      "post": {
+        "operationId": "compareScripts",
+        "tags": [
+          "Scripts"
+        ],
+        "summary": "Compare two scripts",
+        "description": "This endpoint compares two scripts based on the provided plot texts.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "plot1",
+                  "plot2"
+                ],
+                "properties": {
+                  "plot1": {
+                    "type": "string",
+                    "example": "This is the first plot text."
+                  },
+                  "plot2": {
+                    "type": "string",
+                    "example": "This is the second plot text."
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Scripts compared successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "scriptText1": {
+                      "type": "string",
+                      "example": "First script text."
+                    },
+                    "scriptText2": {
+                      "type": "string",
+                      "example": "Second script text."
+                    }
+                  },
+                  "required": [
+                    "scriptText1",
+                    "scriptText2"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/scripts/search": {
+      "post": {
+        "operationId": "searchScripts",
+        "tags": [
+          "Scripts"
+        ],
+        "summary": "Search scripts for specific items",
+        "description": "This endpoint searches scripts for specified items such as characters, locations, scenes, shots, and artifacts.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "items"
+                ],
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "characters list",
+                        "locations list",
+                        "scenes list",
+                        "shots list",
+                        "artifacts list"
+                      ]
+                    }
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Relevant items found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "Relevant item."
+                      }
+                    }
+                  },
+                  "required": [
+                    "results"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/crew": {
+      "post": {
+        "operationId": "createCrewList",
+        "tags": [
+          "Crew"
+        ],
+        "summary": "Create a crew list",
+        "description": "This endpoint creates a crew list based on provided names and titles.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "crewMembers"
+                ],
+                "properties": {
+                  "crewMembers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "name",
+                        "title"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "title": {
+                          "type": "string",
+                          "example": "Director"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Crew list created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Crew list created successfully."
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    },
+    "/schedules": {
+      "post": {
+        "operationId": "createSchedule",
+        "tags": [
+          "Schedules"
+        ],
+        "summary": "Create a schedule",
+        "description": "This endpoint creates a schedule based on crew, date, time, and location.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "crew",
+                  "date",
+                  "time",
+                  "location"
+                ],
+                "properties": {
+                  "crew": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "example": "John Doe"
+                    }
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2023-10-01"
+                  },
+                  "time": {
+                    "type": "string",
+                    "format": "time",
+                    "example": "14:00"
+                  },
+                  "location": {
+                    "type": "string",
+                    "example": "Studio A"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Schedule created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Schedule created successfully."
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      }
+    }
+  }
+}
